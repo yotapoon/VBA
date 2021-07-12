@@ -1,0 +1,34 @@
+Sub plot_heatmap()
+    Dim my_range As Range
+    Set my_range = Range("B2:F6")
+    Dim x_min As Double
+    Dim x0 As Double
+    Dim x_max As Double
+    x_min = Range("I2").Value
+    x0 = Range("I3").Value
+    x_max = Range("I4").Value
+    
+    Dim my_scale As ColorScale
+    
+    Set my_scale = my_range.FormatConditions.AddColorScale(3)
+    With my_scale.ColorScaleCriteria(1)
+        .Type = xlConditionValueNumber
+        .Value = x_min
+        .FormatColor.Color = RGB(255, 0, 0) 'Red
+    End With
+        
+    With my_scale.ColorScaleCriteria(2)
+        .Type = xlConditionValueNumber
+        .Value = x0
+        .FormatColor.Color = RGB(255, 255, 255) 'White
+    End With
+        
+    With my_scale.ColorScaleCriteria(3)
+        .Type = xlConditionValueNumber
+        .Value = x_max
+        .FormatColor.Color = RGB(0, 0, 255) 'Blue
+    End With
+    
+End Sub
+
+
