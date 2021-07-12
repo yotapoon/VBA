@@ -1,0 +1,53 @@
+Sub plot_hbar()
+    Dim chart_object As ChartObject
+    Dim my_range As Range
+    Set my_range = Range("A1").CurrentRegion
+    
+    Dim my_height As Long
+    Dim my_width As Long
+    my_height = my_range.Cells(4, 5).Value
+    my_width = my_range.Cells(3, 5).Value
+    
+    'グラフの範囲，大きさを指定
+    Set chart_object = ActiveSheet.ChartObjects.Add(my_range.Width, my_range.Top, my_width, my_height)
+    
+    'グラフ内部の設定
+    With chart_object.Chart
+        .SetSourceData my_range
+        .ChartType = xlBarClustered '棒グラフの作成
+        .HasLegend = False '凡例は削除
+        
+        'タイトル
+        .ChartTitle.Text = my_range.Cells(1, 5) 'タイトルの決定
+        .ChartTitle.Font.Size = my_range.Cells(1, 5).Font.Size 'タイトルのサイズも変更できる
+        '.ChartTitle.Font.Name = my_range.Cells(1, 5).Font.Name
+        
+        'データラベル
+        .ApplyDataLabels
+        .SeriesCollection(1).DataLabels.Font.Size = 10
+        .SeriesCollection(1).DataLabels.NumberFormatLocal = "#,###"
+        .SeriesCollection(1).DataLabels.Font.Name = "Arial"
+        
+        '縦軸の設定
+        With .Axes(xlValue, xlPrimary)
+            .HasTitle = True
+            .AxisTitle.Text = my_range.Cells(1, 2).Text '縦軸タイトルの設定
+            .TickLabels.Font.Size = 10
+            .TickLabels.NumberFormatLocal = "#,###" '縦軸ラベルの表示
+            .TickLabels.Font.Name = "Arial"
+        End With
+        
+        '棒グラフの間隔を0にする
+        .ChartGroups(1).GapWidth = 0
+        
+        '系列の書式設定
+        With .FullSeriesCollection(1).Format
+            .Fill.ForeColor.RGB = RGB(192, 0, 0) '棒グラフの色はここで変える
+            .Fill.Transparency = 0.4 'この数値が1に近いほど透過度が高い
+            .Line.Visible = True '枠線の有無
+            .Line.ForeColor.ObjectThemeColor = msoThemeColorText1 '枠線の色を決定
+            .Line.Transparency = 0.2 '枠線の透過度
+        End With
+    End With
+    
+End Sub
