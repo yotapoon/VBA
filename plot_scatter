@@ -1,0 +1,71 @@
+Sub plot_scatter()
+    Dim chart_object As ChartObject
+    Dim my_range As Range
+    Set my_range = Range("A1").CurrentRegion
+    
+    Dim my_height As Long
+    Dim my_width As Long
+    my_height = my_range.Cells(4, 5).Value
+    my_width = my_range.Cells(3, 5).Value
+    
+    Dim x_min As Double
+    Dim x_max As Double
+    Dim y_min As Double
+    Dim y_max As Double
+    x_min = my_range.Cells(5, 5)
+    x_max = my_range.Cells(5, 6)
+    y_min = my_range.Cells(6, 5)
+    y_max = my_range.Cells(6, 6)
+    
+    'グラフの範囲，大きさを指定
+    Set chart_object = ActiveSheet.ChartObjects.Add(my_range.Width * 1.2, my_range.Top + 0.5 * my_height, my_width, my_height)
+    
+    'グラフ内部の設定
+    With chart_object.Chart
+        .ChartType = xlXYScatter  '散布図の作成
+        .SetSourceData Source:=Range(Columns(1), Columns(2))
+
+        .HasLegend = False '凡例は削除
+        .ChartTitle.Delete 'タイトルも削除
+        
+        
+        'タイトル
+        '.ChartTitle.Text = my_range.Cells(1, 5) 'タイトルの決定
+        '.ChartTitle.Font.Size = my_range.Cells(1, 5).Font.Size 'タイトルのサイズも変更できる
+        '.ChartTitle.Font.Name = my_range.Cells(1, 5).Font.Name
+        
+        '縦軸の設定
+        With .Axes(xlValue, xlPrimary)
+            .HasTitle = True
+            .AxisTitle.Text = my_range.Cells(1, 2).Text '縦軸タイトルの設定
+            .TickLabels.Font.Size = 10
+            .TickLabels.NumberFormatLocal = "#,###" '縦軸ラベルの表示
+            '.TickLabels.Font.Name = "Arial"
+            .MaximumScale = y_max
+            .MinimumScale = y_min
+        End With
+        
+        '横軸の設定
+        With .Axes(xlCategory, xlPrimary)
+            .HasTitle = True
+            .AxisTitle.Text = my_range.Cells(1, 1).Text '縦軸タイトルの設定
+            .TickLabels.Font.Size = 10
+            .TickLabels.NumberFormatLocal = "#,###" '縦軸ラベルの表示
+            '.TickLabels.Font.Name = "Arial"
+            .MaximumScale = x_max
+            .MinimumScale = x_min
+        End With
+        
+        '系列の書式設定
+        .SeriesCollection(1).MarkerForegroundColor = RGB(192, 0, 0)
+        With .FullSeriesCollection(1).Format
+            .Fill.ForeColor.RGB = RGB(192, 0, 0) '棒グラフの色はここで変える
+        End With
+        
+        
+    End With
+    
+End Sub
+
+
+
